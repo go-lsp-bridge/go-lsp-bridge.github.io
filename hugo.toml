@@ -1,0 +1,31 @@
+baseURL = "https://go-lsp-bridge.github.io/"
+title = "go-lsp-bridge"
+disableKinds = ["taxonomy", "term", "RSS", "sitemap", "404"]
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[[params.phases]]
+  name = "Transport framing bridge"
+  status = "ready"
+  blurb = "Relays JSON-RPC untouched between a WebSocket and a language server's stdio, adding + stripping the `Content-Length` framing so each WS text frame carries one bare JSON object — exactly what `codemirror-languageserver` / `@open-rpc/codemirror-lsp` expect."
+[[params.phases]]
+  name = "Per-connection subprocesses"
+  status = "ready"
+  blurb = "Every WebSocket spawns its own language server (`exec.CommandContext`) and kills it on close. A missing binary or a failed spawn is reported back as a JSON-RPC error frame, so the editor surfaces one visible failure instead of silently dropping completions."
+[[params.phases]]
+  name = "Configurable server registry"
+  status = "ready"
+  blurb = "`DefaultServers()` ships launchers for latex / go / python / typescript / javascript / rust, each overridable per-deployment via a neutral `LSPBRIDGE_*` env var. The registry is a plain map — bring your own, or extend the defaults in place; adding a language is one line."
+[[params.phases]]
+  name = "Concurrency caps"
+  status = "ready"
+  blurb = "Two layers keep the host safe: a process-wide ceiling so it can't be saturated, and a per-subject ceiling (`WithSubject`) so one runaway editor with a reconnect loop can't starve everyone else. The per-user counter keys by authenticated identity, not raw token."
+[[params.phases]]
+  name = "Coverage & six arches"
+  status = "ready"
+  blurb = "A hermetic WS → subprocess → WS round-trip against a bundled `fake-lsp` stub, plus unit tests for every framing / registry / concurrency / error branch — 100% coverage, gofmt + go vet clean, green across all six 64-bit Go arches (exec/WS tests gated off the qemu lanes)."
+[[params.phases]]
+  name = "Server pooling & metrics"
+  status = "planned"
+  blurb = "Future work: optional warm-subprocess pooling to amortise language-server startup, and Prometheus-style counters for spawns, rejections and frame throughput. Not required for the core bridge, which stays dependency-light."
