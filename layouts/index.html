@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+{{/* Dark Reader repaints pages that already draw their own dark theme, as this one does: ask it to stand aside. */}}
+<meta name="darkreader-lock">
 <title>{{ .Site.Title }} — a pure-Go WebSocket↔stdio bridge for JSON-RPC LSP traffic, no cgo</title>
 <meta name="description" content="go-lsp-bridge — a pure-Go bridge that relays JSON-RPC LSP traffic between a WebSocket and a language-server subprocess's stdio (CodeMirror-compatible), no cgo.">
 <style>
